@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History</title>
+
+    <style>
+        /* ==========================================================================
+           1. Global Layout & Bright Animated Canvas
+           ========================================================================== */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+            background: linear-gradient(-45deg, #1fa2a6, #2bbbc0, #159397, #4ae5e2);
+            background-size: 400% 400%;
+            animation: backgroundShimmer 12s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes backgroundShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 60%);
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           2. Framing Vector Overlays (Left & Right Sides)
+           ========================================================================== */
+        .vector-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .side-svg {
+            position: fixed;
+            height: 90vh;
+            width: auto;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+            animation: gentleFloat 7s ease-in-out infinite alternate;
+        }
+
+        .svg-left { left: -30px; top: 5%; }
+        .svg-right { right: -30px; top: 5%; animation-delay: -3.5s; }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-20px) scale(1.03); }
+        }
+
+        .sparkles {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0.45;
+            z-index: 2;
+            filter: blur(2px);
+        }
+        .sp-1 { top: 5%; left: 15%; animation: pulseSparkle 4s infinite alternate; }
+        .sp-2 { bottom: 5%; right: 15%; animation: pulseSparkle 5s infinite alternate-reverse; }
+
+        @keyframes pulseSparkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 0.7; transform: scale(1.25); }
+        }
+
+        /* ==========================================================================
+           3. Dashboard Container Layout (Spacious Desktop Framing)
+           ========================================================================== */
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(28, 60, 70, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 45px 50px;
+            box-shadow: 0 30px 70px rgba(6, 30, 36, 0.55);
+            box-sizing: border-box;
+            z-index: 10;
+            color: #ffffff;
+            position: relative;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #d1f7f5;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ==========================================================================
+           4. Modern Data Table UI Framework
+           ========================================================================== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(12, 28, 33, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th, td {
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        th {
+            background-color: rgba(16, 36, 42, 0.95);
+            color: #4ef2d2;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.8px;
+            border-bottom: 2px solid rgba(78, 242, 210, 0.3);
+        }
+
+        /* Dynamic row transitions */
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        tr:hover {
+            background-color: rgba(78, 242, 210, 0.08);
+            transition: background-color 0.2s ease;
+        }
+
+        /* Custom alignment for precise data viewing grids */
+        td:first-child {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 16px;
+            text-shadow: 0 0 10px rgba(78, 242, 210, 0.2);
+        }
+
+        td:nth-child(2) {
+            color: #bceae7;
+            font-weight: 500;
+        }
+
+        td:last-child {
+            color: #e2f1f1;
+            font-size: 14.5px;
+            line-height: 1.5;
+        }
+
+        /* Interactive Scrollbar customization */
+        .table-responsive::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #238991;
+            border-radius: 4px;
+        }
+
+        /* ==========================================================================
+           5. Interface Action Controls
+           ========================================================================== */
+        .btn-wrapper {
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 30px;
+            background: transparent;
+            border: 1.5px solid #238991;
+            color: #bceae7;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn:hover {
+            background: rgba(35, 137, 145, 0.2);
+            border-color: #4ef2d2;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Responsive adaptations for narrow viewports */
+        @media (max-width: 640px) {
+            .app-container { padding: 30px 20px; }
+            th, td { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sparkles sp-1"></div>
+    <div class="sparkles sp-2"></div>
+
+    <div class="vector-container">
+        <svg class="side-svg svg-left" viewBox="0 0 120 200" fill="none" stroke="#167981" stroke-width="0.8">
+            <polygon points="5,30 25,15 45,30 45,60 25,75 5,60" fill="rgba(22,121,129,0.06)" />
+            <polygon points="45,30 65,15 85,30 85,60 65,75 45,60" />
+            <polygon points="25,75 45,60 45,90 25,105 5,90 5,60" />
+            <polygon points="45,90 65,75 85,90 85,120 65,135 45,120" fill="rgba(22,121,129,0.06)" />
+            <circle cx="25" cy="15" r="1.5" fill="#167981" />
+            <circle cx="85" cy="30" r="1.5" fill="#167981" />
+            <circle cx="25" cy="105" r="1.5" fill="#167981" />
+            <path d="M22,42 C20,39 17,39 16,41 C15,43 17,46 22,49 C27,46 29,43 28,41 C27,39 24,39 22,42 Z" fill="#167981" stroke="none"/>
+            <path d="M52,41 H58 V47 H52 Z M55,38 V50" stroke="#167981" stroke-width="1.5"/>
+        </svg>
+
+        <svg class="side-svg svg-right" viewBox="0 0 120 200" fill="none" stroke="#167981" stroke-width="0.8">
+            <polygon points="35,30 55,15 75,30 75,60 55,75 35,60" />
+            <polygon points="75,30 95,15 115,30 115,60 95,75 75,60" fill="rgba(22,121,129,0.06)" />
+            <polygon points="55,75 75,60 75,90 55,105 35,90 35,60" />
+            <polygon points="75,90 95,75 115,90 115,120 95,135 75,120" />
+            <circle cx="55" cy="15" r="1.5" fill="#167981" />
+            <circle cx="115" cy="90" r="1.5" fill="#167981" />
+            <g transform="translate(91, 40) rotate(45)">
+                <rect x="0" y="0" width="5" height="11" rx="2.5" stroke="#167981" stroke-width="1"/>
+                <line x1="0" y1="5.5" x2="5" y2="5.5" stroke="#167981" stroke-width="1"/>
+            </g>
+        </svg>
+    </div>
+
+    <div class="app-container">
+        <h1>Prediction History</h1>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Disease</th>
+                        <th>Specialist</th>
+                        <th>Symptoms</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in predictions %}
+                    <tr>
+                        <td>{{ item.predicted_disease }}</td>
+                        <td>{{ item.specialist }}</td>
+                        <td>{{ item.selected_symptoms }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="btn-wrapper">
+            <a href="/home" class="btn">
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
