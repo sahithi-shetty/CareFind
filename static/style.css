@@ -1,69 +1,126 @@
 /* ==========================================================================
-   1. Global Theme Reset & High-Performance Animated Background
+   1. Global Theme Reset & High-Performance Animated Background Layout
    ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     margin: 0;
-    padding: 20px 0;
+    padding: 40px 0;
     color: #f1f5f9;
     min-height: 100vh;
     box-sizing: border-box;
-    /* Clean dark-tech animated background canvas */
-    background: linear-gradient(-45deg, #0f172a, #1e1b4b, #0f2b48, #020617);
-    background-size: 400% 400%;
-    animation: medicalTechGradient 15s ease infinite;
+    
+    /* Premium Healthcare Theme Background:
+       - Linear gradient cycling through #0f172a (Slate Dark), #1e1b4b (Deep Indigo), and #172554 (Deep Blue).
+       - Custom 10-icon SVG grid (Heartbeat, Hospital, Cross, Shield, Syringe, Pills, Thermometer, Medicine Bottle, Location Pin, Stethoscope).
+       - Crisp outline style with 12% opacity using cyan/blue tones (#22d3ee / #38bdf8).
+    */
+    background: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='240' viewBox='0 0 300 240'%3E%3Cg fill='none' stroke='%2322d3ee' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.12'%3E%3C!-- 1. Heartbeat --%3E%3Cpath d='M25 40h10l4-12 5 24 4-16 3 4h10'/%3E%3C!-- 2. Hospital --%3E%3Cpath d='M90 25h30v30H90zM100 25v30M90 40h30M100 45h10v10h-10z'/%3E%3C!-- 3. Medical Cross --%3E%3Cpath d='M175 30h14v14h-14zM182 24v26M169 37h26'/%3E%3C!-- 4. Shield --%3E%3Cpath d='M240 25v12c0 6 4 11 10 13 6-2 10-7 10-13V25l-10-4z'/%3E%3C!-- 5. Syringe --%3E%3Cpath d='M35 150l20-20M30 155l5-5M50 135l-8-8M42 143l8 8M47 118l5 5'/%3E%3Ccircle cx='53' cy='117' r='1'/%3E%3C!-- 6. Pills --%3E%3Crect x='100' y='135' width='12' height='22' rx='6' transform='rotate(45 106 146)'/%3E%3Cpath d='M99 143l15-15'/%3E%3Ccircle cx='122' cy='150' r='5'/%3E%3C!-- 7. Thermometer --%3E%3Cpath d='M172 125a4 4 0 0 1 6 0v16a6 6 0 1 1-6 0z'/%3E%3Cpath d='M175 147h2'/%3E%3C!-- 8. Medicine Bottle --%3E%3Cpath d='M242 135h16v25a4 4 0 0 1-4 4h-8a4 4 0 0 1-4-4zM245 135v-5h10v5M242 143h16'/%3E%3C!-- 9. Location Pin --%3E%3Cpath d='M87 78a8 8 0 1 0 16 0c0 6-8 14-8 14s-8-8-8-14z'/%3E%3Ccircle cx='95' cy='78' r='2.5'/%3E%3C!-- 10. Stethoscope --%3E%3Cpath d='M210 70v10a12 12 0 0 0 24 0V70M222 82v12a8 8 0 0 0 16 0v-2M235 92v4a3 3 0 0 0 6 0v-4'/%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(-45deg, #0f172a, #1e1b4b, #172554, #0f172a);
+    background-size: 300px 240px, 400% 400%;
+    animation: medicalTechGradient 25s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* Background Shift Animation Keyframes */
+/* Background Shift & Smooth Floating Pattern Animation Keyframes */
 @keyframes medicalTechGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { background-position: 0px 0px, 0% 50%; }
+    50% { background-position: 30px 40px, 100% 50%; }
+    100% { background-position: 0px 0px, 0% 50%; }
 }
 
 /* Base anchor resets */
 a {
     text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 /* ==========================================================================
    2. Container & Form Layout (Glassmorphism Glass Layer)
    ========================================================================== */
 .container {
-    width: 85%;
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1150px;
     margin: 40px auto;
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 35px;
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    background: rgba(10, 15, 30, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(56, 189, 248, 0.12);
+    padding: 45px;
+    border-radius: 28px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 2px rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 2;
 }
 
 h1 {
     text-align: center;
-    font-size: 32px;
-    font-weight: 700;
+    font-size: 38px;
+    font-weight: 800;
     margin-top: 10px;
-    margin-bottom: 30px;
-    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #22d3ee, #0ea5e9, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    filter: drop-shadow(0 2px 8px rgba(14, 165, 233, 0.2));
 }
 
 /* ==========================================================================
    3. Top Navigation & User Profile Menu
    ========================================================================== */
+.navbar {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 16px;
+}
+
+.navbar a {
+    color: #94a3b8;
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 14px;
+}
+
+.navbar a:hover, .navbar a.active {
+    color: #22d3ee;
+    text-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
+}
+
+.navbar a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #22d3ee, #818cf8);
+    transition: width 0.3s ease;
+}
+
+.navbar a:hover::after, .navbar a.active::after {
+    width: 100%;
+}
+
 .profile-container {
     position: relative;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
+    gap: 16px;
+    margin-bottom: 35px;
+    padding-bottom: 24px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -72,58 +129,75 @@ h1 {
 }
 
 .profile-icon {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    background: linear-gradient(135deg, #06b6d4, #2563eb);
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
 
 .profile-icon:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.6);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 28px rgba(6, 182, 212, 0.6);
 }
 
 .profile-name {
     font-size: 15px;
     font-weight: 600;
-    color: #cbd5e1;
+    color: #e2e8f0;
+    letter-spacing: 0.2px;
 }
 
 /* Dropdown Context Menu */
 .profile-menu {
     display: none;
     position: absolute;
-    top: 55px;
+    top: 60px;
     right: 0;
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    min-width: 190px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    background: rgba(11, 17, 32, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 16px;
+    min-width: 230px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     z-index: 1000;
     overflow: hidden;
+    transform-origin: top right;
+    animation: menuFadeIn 0.25s ease;
+}
+
+@keyframes menuFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .profile-menu a {
     display: block;
-    padding: 14px 18px;
+    padding: 15px 22px;
     color: #cbd5e1;
     font-size: 14px;
-    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.profile-menu a:last-child {
+    border-bottom: none;
 }
 
 .profile-menu a:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.15), transparent);
+    color: #22d3ee;
+    padding-left: 28px;
 }
 
 /* ==========================================================================
@@ -131,124 +205,234 @@ h1 {
    ========================================================================== */
 #symptomSearch {
     width: 100%;
-    padding: 14px 18px;
-    margin-bottom: 20px;
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 30px;
+    background: rgba(11, 17, 32, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
     color: white;
-    font-size: 15px;
+    font-size: 16px;
     outline: none;
     box-sizing: border-box;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 #symptomSearch:focus {
-    border-color: #38bdf8;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    border-color: #06b6d4;
+    box-shadow: 0 0 22px rgba(6, 182, 212, 0.3),
+                inset 0 1px 2px rgba(0,0,0,0.4);
+    background: rgba(7, 11, 22, 0.9);
+}
+
+#symptomSearch::placeholder {
+    color: #64748b;
 }
 
 /* Responsive Grid System */
 .symptoms-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    margin: 25px 0;
-    max-height: 320px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+    max-height: 380px;
     overflow-y: auto;
-    padding: 15px;
-    background: rgba(15, 23, 42, 0.4);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    background: rgba(7, 11, 22, 0.4);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 /* Interactive Checkbox Cards */
 label {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    padding: 14px;
-    border-radius: 10px;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 18px;
+    border-radius: 14px;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
     user-select: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 label:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-3px);
+    border-color: rgba(6, 182, 212, 0.25);
+    color: #e2e8f0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Visual state changes when user clicks standard HTML checkboxes */
 label:has(input[type="checkbox"]:checked) {
-    background: rgba(14, 165, 233, 0.15);
-    border-color: rgba(14, 165, 233, 0.4);
-    color: #38bdf8;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(37, 99, 235, 0.05));
+    border-color: rgba(6, 182, 212, 0.5);
+    color: #22d3ee;
     font-weight: 600;
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.15);
 }
 
 label input[type="checkbox"] {
-    accent-color: #38bdf8;
-    transform: scale(1.15);
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #475569;
+    border-radius: 5px;
+    background: transparent;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    transform: none;
     margin: 0;
+}
+
+label input[type="checkbox"]::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: 0.15s transform ease-in-out;
+    background-color: #22d3ee;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+label input[type="checkbox"]:checked {
+    border-color: #22d3ee;
+    background: rgba(6, 182, 212, 0.1);
+}
+
+label input[type="checkbox"]:checked::before {
+    transform: scale(1);
 }
 
 /* Custom Scrollbar for the selection grid */
 .symptoms-container::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+}
+.symptoms-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.15);
+    border-radius: 10px;
 }
 .symptoms-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(6, 182, 212, 0.25);
     border-radius: 10px;
+    border: 2px solid rgba(7, 11, 22, 1);
+}
+.symptoms-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.45);
 }
 
 /* ==========================================================================
    5. Interactive Functional Buttons
    ========================================================================== */
 button {
-    padding: 12px 26px;
+    padding: 16px 36px;
     margin-top: 15px;
-    margin-right: 10px;
+    margin-right: 14px;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #06b6d4, #2563eb);
     color: white;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.25);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    letter-spacing: 0.3px;
 }
 
 button:hover {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #0891b2, #1d4ed8);
+    box-shadow: 0 8px 28px rgba(6, 182, 212, 0.45);
+    transform: translateY(-3px);
 }
 
 button:active {
     transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(6, 182, 212, 0.2);
 }
 
 /* Specialized Entry Flow Buttons */
 .login-signup-btn {
     width: auto;
     min-width: 160px;
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #f1f5f9;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 15px;
     box-shadow: none;
 }
 
 .login-signup-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    background: rgba(6, 182, 212, 0.1);
+    color: #22d3ee;
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* ==========================================================================
-   6. Data Output Engine Panels (
+   6. Medical Branding Banner Component (Centered Layout)
+   ========================================================================== */
+.medical-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 35px auto;
+    width: 100%;
+    max-width: 900px;
+    background: linear-gradient(135deg, rgba(9, 15, 32, 0.85), rgba(4, 47, 46, 0.4));
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    color: white;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative background glowing orb inside banner */
+.medical-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    animation: pulseGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+    from { transform: scale(1); opacity: 0.8; }
+    to { transform: scale(1.15); opacity: 1; }
+}
+
+.medical-banner h2 {
+    margin: 0 0 14px 0;
+    font-size: 30px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, #e0f2fe, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.3px;
+}
+
+.medical-banner p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #94a3b8;
+    max-width: 750px;
+}

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disease Prediction</title>
-    
+
     <style>
         /* ==========================================================================
            1. Global Layout & Bright Animated Canvas
@@ -27,9 +27,17 @@
         }
 
         @keyframes backgroundShimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         body::before {
@@ -66,29 +74,59 @@
             animation: gentleFloat 7s ease-in-out infinite alternate;
         }
 
-        .svg-left { left: -30px; top: 5%; }
-        .svg-right { right: -30px; top: 5%; animation-delay: -3.5s; }
+        .svg-left {
+            left: -30px;
+            top: 5%;
+        }
+
+        .svg-right {
+            right: -30px;
+            top: 5%;
+            animation-delay: -3.5s;
+        }
 
         @keyframes gentleFloat {
-            0% { transform: translateY(0px) scale(1); }
-            100% { transform: translateY(-20px) scale(1.03); }
+            0% {
+                transform: translateY(0px) scale(1);
+            }
+
+            100% {
+                transform: translateY(-20px) scale(1.03);
+            }
         }
 
         .sparkles {
             position: absolute;
             width: 140px;
             height: 140px;
-            background: radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%);
             opacity: 0.45;
             z-index: 2;
             filter: blur(2px);
         }
-        .sp-1 { top: 5%; left: 20%; animation: pulseSparkle 4s infinite alternate; }
-        .sp-2 { bottom: 5%; right: 20%; animation: pulseSparkle 5s infinite alternate-reverse; }
+
+        .sp-1 {
+            top: 5%;
+            left: 20%;
+            animation: pulseSparkle 4s infinite alternate;
+        }
+
+        .sp-2 {
+            bottom: 5%;
+            right: 20%;
+            animation: pulseSparkle 5s infinite alternate-reverse;
+        }
 
         @keyframes pulseSparkle {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 0.7; transform: scale(1.25); }
+            0% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 0.7;
+                transform: scale(1.25);
+            }
         }
 
         /* ==========================================================================
@@ -96,7 +134,8 @@
            ========================================================================== */
         .container {
             width: 100%;
-            max-width: 1200px; /* Expanded from 700px to widen horizontally */
+            max-width: 1200px;
+            /* Expanded from 700px to widen horizontally */
             background: rgba(28, 60, 70, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -184,7 +223,7 @@
             border: 1px solid rgba(78, 242, 210, 0.3);
             border-radius: 12px;
             width: 180px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             z-index: 100;
             overflow: hidden;
         }
@@ -250,9 +289,18 @@
         }
 
         /* Scrollbar customization */
-        .symptoms-container::-webkit-scrollbar { width: 6px; }
-        .symptoms-container::-webkit-scrollbar-track { background: transparent; }
-        .symptoms-container::-webkit-scrollbar-thumb { background: #238991; border-radius: 4px; }
+        .symptoms-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .symptoms-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .symptoms-container::-webkit-scrollbar-thumb {
+            background: #238991;
+            border-radius: 4px;
+        }
 
         .symptoms-container label {
             display: flex;
@@ -342,11 +390,19 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .result p, .result li {
+        .result p,
+        .result li {
             color: #e2f1f1;
             font-size: 15px;
             line-height: 1.6;
@@ -360,7 +416,8 @@
             text-shadow: 0 0 10px rgba(78, 242, 210, 0.4);
         }
 
-        ul, ol {
+        ul,
+        ol {
             padding-left: 20px;
             margin: 10px 0;
         }
@@ -371,12 +428,24 @@
 
         /* Responsive Breakdowns for Medium/Small Interfaces */
         @media (max-width: 768px) {
-            .symptoms-container { grid-template-columns: repeat(2, 1fr); }
-            .form-actions { grid-template-columns: 1fr; gap: 10px; }
+            .symptoms-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-actions {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
         }
+
         @media (max-width: 480px) {
-            .symptoms-container { grid-template-columns: 1fr; }
-            .container { padding: 25px 20px; }
+            .symptoms-container {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
@@ -394,6 +463,7 @@
 
 <body>
 
+
     <div class="sparkles sp-1"></div>
     <div class="sparkles sp-2"></div>
 
@@ -406,8 +476,9 @@
             <circle cx="25" cy="15" r="1.5" fill="#167981" />
             <circle cx="85" cy="30" r="1.5" fill="#167981" />
             <circle cx="25" cy="105" r="1.5" fill="#167981" />
-            <path d="M22,42 C20,39 17,39 16,41 C15,43 17,46 22,49 C27,46 29,43 28,41 C27,39 24,39 22,42 Z" fill="#167981" stroke="none"/>
-            <path d="M52,41 H58 V47 H52 Z M55,38 V50" stroke="#167981" stroke-width="1.5"/>
+            <path d="M22,42 C20,39 17,39 16,41 C15,43 17,46 22,49 C27,46 29,43 28,41 C27,39 24,39 22,42 Z"
+                fill="#167981" stroke="none" />
+            <path d="M52,41 H58 V47 H52 Z M55,38 V50" stroke="#167981" stroke-width="1.5" />
         </svg>
 
         <svg class="side-svg svg-right" viewBox="0 0 120 200" fill="none" stroke="#167981" stroke-width="0.8">
@@ -418,8 +489,8 @@
             <circle cx="55" cy="15" r="1.5" fill="#167981" />
             <circle cx="115" cy="90" r="1.5" fill="#167981" />
             <g transform="translate(91, 40) rotate(45)">
-                <rect x="0" y="0" width="5" height="11" rx="2.5" stroke="#167981" stroke-width="1"/>
-                <line x1="0" y1="5.5" x2="5" y2="5.5" stroke="#167981" stroke-width="1"/>
+                <rect x="0" y="0" width="5" height="11" rx="2.5" stroke="#167981" stroke-width="1" />
+                <line x1="0" y1="5.5" x2="5" y2="5.5" stroke="#167981" stroke-width="1" />
             </g>
         </svg>
     </div>
@@ -432,9 +503,20 @@
                 <div class="profile-icon" onclick="toggleMenu()">
                     {{ name[0]|upper }}
                 </div>
-                <div id="profileMenu" class="profile-menu">
+                <div class="profile-menu" id="profileMenu">
+
+                    <a href="/profile">Profile</a>
+
+                    <a href="/dashboard">Dashboard</a>
+
                     <a href="/history">Prediction History</a>
+
+                    <a href="/health-tips">Health Tips</a>
+
+                    <a href="/feedback">Feedback</a>
+
                     <a href="/logout">Logout</a>
+
                 </div>
             </div>
             <span class="profile-name">{{ name }}</span>
@@ -446,8 +528,20 @@
             </a>
         </div>
         {% endif %}
+        <div class="medical-banner">
 
-        <h1>AI Disease Prediction System</h1>
+            <h2>
+                AI DISEASE PREDICTION SYSTEM
+            </h2>
+
+            <p>
+                Get instant disease predictions,
+                specialist recommendations,
+                nearby hospitals, and personalized
+                health insights with CareFind.
+            </p>
+
+        </div>
 
         <form action="/predict" method="POST">
             {% if error %}
@@ -469,6 +563,7 @@
             </div>
 
             <div class="form-actions">
+
                 <button type="submit">Predict Disease</button>
                 <a href="/history" style="text-decoration: none;">
                     <button type="button">View Prediction History</button>
@@ -510,8 +605,10 @@
                 {% endfor %}
             </ul>
 
-            <p style="color:#ff6b6b; margin-top:20px; font-size: 13.5px; border-top: 1px solid rgba(255,107,107,0.2); padding-top: 12px;">
-                ⚠ This AI prediction is for educational purposes only. Please consult a healthcare professional for medical advice.
+            <p
+                style="color:#ff6b6b; margin-top:20px; font-size: 13.5px; border-top: 1px solid rgba(255,107,107,0.2); padding-top: 12px;">
+                ⚠ This AI prediction is for educational purposes only. Please consult a healthcare professional for
+                medical advice.
             </p>
 
             <br>
@@ -522,6 +619,20 @@
             </a>
         </div>
         {% endif %}
+        <div style="text-align:center; margin-top:30px;">
+
+            <a href="/about">
+
+                <button type="button" style="
+                width:auto;
+                padding:12px 30px;
+            ">
+                    ← Back to CareFind
+                </button>
+
+            </a>
+
+        </div>
 
     </div>
 

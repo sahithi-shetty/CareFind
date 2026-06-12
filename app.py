@@ -4,6 +4,8 @@ from flask import Flask, render_template, request ,redirect, session
 import pickle
 import pandas as pd
 from pymongo import MongoClient
+from collections import Counter
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "my_secret_key"
@@ -16,6 +18,8 @@ db = client["medibridge"]
 
 predictions_collection = db["predictions"]
 users_collection = db["users"]
+contacts_collection = db["contacts"]
+feedback_collection = db["feedback"]
 
 # Load datasets
 training = pd.read_csv('Training.csv')
@@ -144,16 +148,55 @@ def get_recommended_hospitals(specialist):
             "Yashoda Hospitals",
             "CARE Hospitals"
         ]
+        
     }
 
     return hospitals.get(
         specialist,
         ["Apollo Hospitals", "Yashoda Hospitals"]
     )
+hospital_details = {
+
+    "Apollo Hospitals": {
+        "website": "https://www.apollohospitals.com/contact-us",
+        "phone": "+91 1860 500 1066"
+    },
+
+    "Yashoda Hospitals": {
+        "website": "https://www.yashodahospitals.com/contact-us/",
+        "phone": "+91 40 4567 4567"
+    },
+
+    "CARE Hospitals": {
+        "website": "https://www.carehospitals.com/contact-us",
+        "phone": "+91 40 6810 6585"
+    },
+
+    "KIMS Hospitals": {
+        "website": "https://www.kimshospitals.com/contact-us",
+        "phone": "+91 40 4488 5000"
+    },
+
+    "AIG Hospitals": {
+        "website": "https://www.aighospitals.com/contact",
+        "phone": "+91 40 4244 4222"
+    },
+
+    "Sunshine Hospitals": {
+        "website": "https://www.kimssunshine.co.in/contact-us/",
+        "phone": "+91 40 4455 0000"
+    },
+
+    "Asian Heart Institute": {
+        "website": "https://asianheartinstitute.org/contact-us",
+        "phone": "+91 22 6698 6666"
+    }
+}
     
 @app.route('/')
 def splash():
     return render_template('splash.html')
+
 
 @app.route('/home')
 def home():
@@ -186,7 +229,7 @@ def login():
             session['user'] = user['email']
             session['name'] = user['name']
 
-            return redirect('/home')
+            return redirect('/about')
 
         return "Invalid Email or Password"
 
@@ -199,7 +242,186 @@ def logout():
 
     return redirect('/login')
 
+@app.route('/dashboard')
+def dashboard():
 
+    if 'user' not in session:
+        return redirect('/login')
+
+    predictions = list(
+        predictions_collection.find(
+            {"user_email": session['user']}
+        )
+    )
+
+    total_predictions = len(predictions)
+
+    latest = predictions_collection.find_one(
+        {"user_email": session['user']},
+        sort=[("_id",-1)]
+    )
+
+    most_common_disease = "N/A"
+
+    if predictions:
+
+        diseases = [
+            p["predicted_disease"]
+            for p in predictions
+        ]
+
+        most_common_disease = Counter(
+            diseases
+        ).most_common(1)[0][0]
+
+    health_score = min(
+        total_predictions * 5,
+        100
+    )
+
+    tips = [
+
+        "Drink at least 8 glasses of water daily.",
+
+        "Exercise for 30 minutes every day.",
+
+        "Get 7-8 hours of sleep.",
+
+        "Avoid excessive junk food.",
+
+        "Take regular health checkups."
+    ]
+
+    import random
+
+    tip_of_day = random.choice(tips)
+
+    return render_template(
+
+        'dashboard.html',
+
+        total_predictions=total_predictions,
+
+        latest=latest,
+
+        most_common_disease=most_common_disease,
+
+        health_score=health_score,
+
+        tip_of_day=tip_of_day,
+
+        user_name=session.get('name')
+
+    )
+
+@app.route('/profile')
+def profile():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    user = users_collection.find_one({
+        "email": session['user']
+    })
+
+    predictions = list(
+        predictions_collection.find({
+            "user_email": session['user']
+        })
+    )
+    member_since = user["_id"].generation_time.strftime(
+            "%d %b %Y"
+        )
+    print("Member Since:", member_since)
+
+    total_predictions = len(predictions)
+
+    most_common_disease = None
+    disease_count = 0
+    specialist = None
+    health_message = None
+
+    if predictions:
+
+        diseases = [
+            p["predicted_disease"]
+            for p in predictions
+        ]
+
+        disease_stats = Counter(diseases)
+
+        most_common_disease, disease_count = (
+            disease_stats.most_common(1)[0]
+        )
+
+        specialist = get_specialist(
+            most_common_disease
+        )
+
+        if disease_count >= 3:
+
+            health_message = (
+                f"{most_common_disease} "
+                f"predicted frequently."
+            )
+
+    return render_template(
+    'profile.html',
+    user=user,
+    member_since=member_since,
+    total_predictions=total_predictions,
+    most_common_disease=most_common_disease,
+    disease_count=disease_count,
+    specialist=specialist,
+    health_message=health_message
+)
+
+@app.route('/feedback', methods=['GET','POST'])
+def feedback():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+
+        feedback_collection.insert_one({
+
+            "user_email": session['user'],
+            "rating": request.form['rating'],
+            "review": request.form['review'],
+            "suggestion": request.form['suggestion']
+
+        })
+
+        return render_template(
+            'feedback.html',
+            success=True
+        )
+
+    return render_template(
+        'feedback.html'
+    )
+
+@app.route('/admin')
+def admin():
+
+    total_users = users_collection.count_documents({})
+
+    total_predictions = predictions_collection.count_documents({})
+
+    total_feedback = feedback_collection.count_documents({})
+
+    feedbacks = list(
+        feedback_collection.find().sort("_id", -1)
+    )
+
+    return render_template(
+        'admin.html',
+        total_users=total_users,
+        total_predictions=total_predictions,
+        total_feedback=total_feedback,
+        feedbacks=feedbacks
+    )
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 
@@ -214,7 +436,8 @@ def signup():
         users_collection.insert_one({
             "name": name,
             "email": email,
-            "password": password
+            "password": password,
+            "created_at": datetime.now()
         })
 
         return redirect('/login')
@@ -236,7 +459,8 @@ def hospitals():
     return render_template(
         'hospitals.html',
         specialist=specialist,
-        recommended_hospitals=recommended_hospitals
+        recommended_hospitals=recommended_hospitals,
+        hospital_details=hospital_details
     )
 
 @app.route('/history')
@@ -257,6 +481,50 @@ def history():
         'history.html',
         predictions=predictions
     )
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/health-tips')
+def health_tips():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    predictions = list(
+        predictions_collection.find(
+            {"user_email": session['user']}
+        )
+    )
+
+    if not predictions:
+
+        return render_template(
+            "health_tips.html",
+            disease=None,
+            tips=[]
+        )
+
+    diseases = [
+        p["predicted_disease"]
+        for p in predictions
+    ]
+
+    most_common_disease = Counter(
+        diseases
+    ).most_common(1)[0][0]
+
+    tips = get_precautions(
+        most_common_disease
+    )
+
+    return render_template(
+        "health_tips.html",
+        disease=most_common_disease,
+        tips=tips
+    )
+
 
 @app.route('/predict', methods=['POST'])
 def predict():

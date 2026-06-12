@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>About CareFind</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    /* Clean dark-tech animated background canvas containing inline SVG medical icons */
+    background: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%2338bdf8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' opacity='0.15'%3E%3Cpath d='M20 30h10v10H20zM25 25v20M15 35h20'/%3E%3Cpath d='M100 25c5 0 5 15 10 15s5-15 10-15'/%3E%3Cpath d='M110 20v20M105 30h10'/%3E%3Cpath d='M140 85h16v12h-16zM148 79v6M143 91h10'/%3E%3Cpath d='M30 115c0-10 15-10 15 0v15H30zM37.5 105v10'/%3E%3Cpath d='M80 130a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM75 122h10M80 117v10'/%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(-45deg, #0f172a, #1e1b4b, #0f2b48, #020617);
+    background-size: 180px 180px, 400% 400%;
+    animation: medicalTechGradient 15s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    padding: 40px 0;
+}
+
+/* Background Shift & Floating Pattern Animation Keyframes */
+@keyframes medicalTechGradient {
+    0% { background-position: 0px 0px, 0% 50%; }
+    50% { background-position: 90px 90px, 100% 50%; }
+    100% { background-position: 0px 0px, 0% 50%; }
+}
+
+/* --- VISIBLE MEDICAL PATTERN SYSTEM --- */
+.medical-pattern-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    padding: 20px;
+    gap: 20px;
+}
+
+.med-blueprint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.med-blueprint svg {
+    width: 38px;
+    height: 38px;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    opacity: 0.14; /* Perfectly nested in the 12%-18% range */
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+    transform: translateZ(0);
+}
+
+/* Branding Color Schemes */
+.c-blue svg { stroke: #38bdf8; }
+.c-teal svg { stroke: #0ea5e9; }
+
+/* Asynchronous floating clusters across coordinate grids */
+.med-blueprint:nth-child(3n+1) svg { animation: slowDriftA 14s ease-in-out infinite alternate; }
+.med-blueprint:nth-child(3n+2) svg { animation: slowDriftB 18s ease-in-out infinite alternate; }
+.med-blueprint:nth-child(3n+3) svg { animation: slowDriftC 16s ease-in-out infinite alternate; }
+
+@keyframes slowDriftA {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    100% { transform: translateY(-15px) translateX(5px) rotate(6deg) scale(1.03); }
+}
+
+@keyframes slowDriftB {
+    0% { transform: translateY(10px) translateX(-5px) rotate(0deg); }
+    100% { transform: translateY(-10px) translateX(5px) rotate(-8deg); }
+}
+
+@keyframes slowDriftC {
+    0% { transform: translateY(-5px) rotate(-4deg); }
+    100% { transform: translateY(12px) translateX(-6px) rotate(8deg); }
+}
+
+/* --- CONTAINER & FORM LAYOUT (Glassmorphism Glass Layer) --- */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 50px;
+    border-radius: 25px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    font-size: 55px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tagline {
+    margin-top: 15px;
+    font-size: 22px;
+    font-weight: 500;
+    color: #93c5fd;
+    letter-spacing: 1px;
+}
+
+.description {
+    margin-top: 30px;
+    line-height: 1.8;
+    font-size: 18px;
+    color: #cbd5e1;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- INTERACTIVE BUTTON GROUP --- */
+.button-group {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    text-decoration: none;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    color: white;
+    padding: 14px 35px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* --- FEATURE CARD SEGMENTS --- */
+.cards {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 30px 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #38bdf8;
+}
+
+.card p {
+    color: #cbd5e1;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+</style>
+</head>
+
+<body>
+
+    <div class="medical-pattern-layer">
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 10v6M9 13h6"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v8M9 12h6"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M21 9H3M21 15H3M12 3v18"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l7-7a5 5 0 1 1 7.071 7.071l-7 7a5 5 0 1 1-7.071-7.071zM8.5 8.5l7 7"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10c0 7 10 10 10 10s10-3 10-10A10 10 0 0 0 12 2zm0 13H8M12 9v6"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 7v10M8 12h8"/></svg></div>
+
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v8M9 12h6"/></svg></div>
+        <div class="med-blueprint c-blue"></div><div class="med-blueprint c-blue"></div>
+        <div class="med-blueprint c-teal"></div><div class="med-blueprint c-teal"></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l7-7a5 5 0 1 1 7.071 7.071l-7 7a5 5 0 1 1-7.071-7.071zM8.5 8.5l7 7"/></svg></div>
+
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 7v10M8 12h8"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 10v6M9 13h6"/></svg></div>
+        <div class="med-blueprint c-blue"></div><div class="med-blueprint c-blue"></div>
+        <div class="med-blueprint c-teal"></div><div class="med-blueprint c-teal"></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v8M9 12h6"/></svg></div>
+
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10c0 7 10 10 10 10s10-3 10-10A10 10 0 0 0 12 2zm0 13H8M12 9v6"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l7-7a5 5 0 1 1 7.071 7.071l-7 7a5 5 0 1 1-7.071-7.071zM8.5 8.5l7 7"/></svg></div>
+        <div class="med-blueprint c-teal"></div><div class="med-blueprint c-teal"></div>
+        <div class="med-blueprint c-blue"></div><div class="med-blueprint c-blue"></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 10v6M9 13h6"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M21 9H3M21 15H3M12 3v18"/></svg></div>
+
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/></svg></div>
+        <div class="med-blueprint c-blue"></div><div class="med-blueprint c-blue"></div>
+        <div class="med-blueprint c-teal"></div><div class="med-blueprint c-teal"></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 7v10M8 12h8"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v8M9 12h6"/></svg></div>
+
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M21 9H3M21 15H3M12 3v18"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM12 8v8M9 12h6"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l7-7a5 5 0 1 1 7.071 7.071l-7 7a5 5 0 1 1-7.071-7.071zM8.5 8.5l7 7"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M12 10v6M9 13h6"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/></svg></div>
+        <div class="med-blueprint c-teal"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10c0 7 10 10 10 10s10-3 10-10A10 10 0 0 0 12 2zm0 13H8M12 9v6"/></svg></div>
+        <div class="med-blueprint c-blue"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 7v10M8 12h8"/></svg></div>
+    </div>
+
+    <div class="container">
+
+        <h1 class="logo">CAREFIND</h1>
+
+        <p class="tagline">
+            Smart Healthcare Recommendation Platform
+        </p>
+
+        <p class="description">
+            CareFind is an AI-powered healthcare system that predicts possible diseases based on symptoms, recommends specialists, suggests hospitals, and maintains personalized medical prediction history.
+        </p>
+
+        <div class="button-group">
+            <a href="/home" class="btn">Disease Prediction</a>
+            <a href="/dashboard" class="btn">Dashboard</a>
+            <a href="/profile" class="btn">Profile</a>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>AI Prediction</h3>
+                <p>Predict diseases using Machine Learning models.</p>
+            </div>
+
+            <div class="card">
+                <h3>Hospital Finder</h3>
+                <p>Locate nearby hospitals and specialists instantly.</p>
+            </div>
+
+            <div class="card">
+                <h3>User History</h3>
+                <p>Track previous predictions securely using MongoDB.</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
