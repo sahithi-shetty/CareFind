@@ -6,13 +6,20 @@ import pandas as pd
 from pymongo import MongoClient
 from collections import Counter
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "my_secret_key"
 
 # Load trained model
 model = pickle.load(open('disease_model.pkl', 'rb'))
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient(
+    os.getenv("MONGO_URI")
+)
 
 db = client["medibridge"]
 
