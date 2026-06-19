@@ -8,12 +8,27 @@ from collections import Counter
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-import os
+import bcrypt
+from flask_mail import Mail, Message
+import random
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "my_secret_key"
+
+# Initialize Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = "sahithivenkatesh15@gmail.com"
+app.config['MAIL_PASSWORD'] = "gurprrqnjaoqlhwt"
+app.config['MAIL_DEFAULT_SENDER'] = "sahithivenkatesh15@gmail.com"
+
+mail = Mail(app)
+print("EMAIL_USER =", os.getenv("EMAIL_USER"))
+print("EMAIL_PASS =", os.getenv("EMAIL_PASS"))
+
 
 # Load trained model
 model = pickle.load(open('disease_model.pkl', 'rb'))
@@ -226,12 +241,13 @@ def login():
 
         user = users_collection.find_one({
 
-            "email": email,
-            "password": password
-
+            "email": email
         })
 
-        if user:
+        if user and bcrypt.checkpw(
+                password.encode('utf-8'),
+                user['password']
+     ):
 
             session['user'] = user['email']
             session['name'] = user['name']
@@ -439,11 +455,15 @@ def signup():
         password = request.form['password']
         print("Signup Route Hit")
         print(name, email, password)
+        hashed_password = bcrypt.hashpw(
+            password.encode('utf-8'),
+            bcrypt.gensalt()
+        )
 
         users_collection.insert_one({
             "name": name,
             "email": email,
-            "password": password,
+            "password": hashed_password,
             "created_at": datetime.now()
         })
 
@@ -625,7 +645,105 @@ def predict():
     user=session.get('user'),
     name=session.get('name')
     )
+@app.route('/forgot-password', methods=['GET','POST'])
+def forgot_password():
+
+    if request.method == 'POST':
+
+        email = request.form['email']
+
+        user = users_collection.find_one({
+            "email": email
+        })
+
+        if not user:
+            return "Email Not Found"
+
+        otp = str(random.randint(100000,999999))
+
+        session['reset_email'] = email
+        session['otp'] = otp
+        session['otp_time'] = datetime.now().timestamp()
+
+        msg = Message(
+            subject="CareFind - Password Reset Verification",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+
+        msg.body = f"""
+        Hello User,
+
+        We received a request to reset your CareFind account password.
+
+        Your One-Time Password (OTP) is:
+
+        {otp}
+
+        This OTP is valid for 5 minutes.
+
+        If you did not request a password reset, please ignore this email.
+ 
+        Regards,
+        CareFind Team
+        AI Powered Healthcare Recommendation System
+      """
+        print("MAIL USER:", app.config['MAIL_USERNAME'])
+        mail.send(msg)
+
+        return redirect('/verify-otp')
+
+    return render_template('forgot_password.html')
+@app.route('/verify-otp', methods=['GET','POST'])
+def verify_otp():
+
+    if request.method == 'POST':
+
+        entered_otp = request.form['otp']
+
+        otp_time = session.get('otp_time')
+
+        if datetime.now().timestamp() - otp_time > 300:
+            return "OTP Expired. Please request a new OTP."
+
+        if entered_otp == session.get('otp'):
+            return redirect('/reset-password')
+
+        return "Invalid OTP"
+    
+    return render_template('verify_otp.html')
+@app.route('/reset-password', methods=['GET','POST'])
+def reset_password():
+
+    if request.method == 'POST':
+
+        new_password = request.form['password']
+
+        hashed_password = bcrypt.hashpw(
+            new_password.encode('utf-8'),
+            bcrypt.gensalt()
+        )
+
+        users_collection.update_one(
+            {
+                "email": session['reset_email']
+            },
+            {
+                "$set": {
+                    "password": hashed_password
+                }
+            }
+        )
+
+        session.pop('otp', None)
+        session.pop('otp_time', None)
+        session.pop('reset_email', None)
+
+        return redirect('/login')
+
+    return render_template('reset_password.html')
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
